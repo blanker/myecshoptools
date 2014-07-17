@@ -1,0 +1,351 @@
+ECshop V2.7.3 最新最全的去除版权的方法,包含前台后台
+ Ecshop	  飘云  2012-07-15 23:45:25  浏览：4622  评论：0
+
+ 
+一、去掉网页标题 Powered by ECShop
+打开includes/lib_main.php 文件
+查找：
+
+PHP
+
+1
+$page_title = $GLOBALS['_CFG']['shop_title'] . ' - ' . 'Powered by ECShop';
+替换为：
+
+PHP
+
+1
+$page_title = $GLOBALS['_CFG']['shop_title'];
+二、去掉底部乱跑的 Powered by ecshop
+打开 js/common.js，查找：
+
+JavaScript
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+onload = function()
+{
+var link_arr = document.getElementsByTagName(String.fromCharCode(65));
+var link_str;
+var link_text;
+var regg, cc;
+var rmd, rmd_s, rmd_e, link_eorr = 0;
+var e = new Array(97, 98, 99,
+100, 101, 102, 103, 104, 105, 106, 107, 108, 109,
+110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
+120, 121, 122
+);
+ 
+try
+{
+for(var i = 0; i < link_arr.length; i++)
+{
+link_str = link_arr[i].href;
+if (link_str.indexOf(String.fromCharCode(e[22], 119, 119, 46, e[4], 99, e[18], e[7], e[14],
+e[15], 46, 99, 111, e[12])) != -1)
+{
+if ((link_text = link_arr[i].innerText) == undefined)
+{
+throw "noIE";
+}
+regg = new RegExp(String.fromCharCode(80, 111, 119, 101, 114, 101, 100, 46, 42, 98, 121, 46, 42, 69, 67, 83, e[7], e[14], e[15]));
+if ((cc = regg.exec(link_text)) != null)
+{
+if (link_arr[i].offsetHeight == 0)
+{
+break;
+}
+link_eorr = 1;
+break;
+}
+}
+else
+{
+link_eorr = link_eorr ? 0 : link_eorr;
+continue;
+}
+}
+} // IE
+catch(exc)
+{
+for(var i = 0; i < link_arr.length; i++)
+{
+link_str = link_arr[i].href;
+if (link_str.indexOf(String.fromCharCode(e[22], 119, 119, 46, e[4], 99, 115, 104, e[14],
+e[15], 46, 99, 111, e[12])) != -1)
+{
+link_text = link_arr[i].textContent;
+regg = new RegExp(String.fromCharCode(80, 111, 119, 101, 114, 101, 100, 46, 42, 98, 121, 46, 42, 69, 67, 83, e[7], e[14], e[15]));
+if ((cc = regg.exec(link_text)) != null)
+{
+if (link_arr[i].offsetHeight == 0)
+{
+break;
+}
+link_eorr = 1;
+break;
+}
+}
+else
+{
+link_eorr = link_eorr ? 0 : link_eorr;
+continue;
+}
+}
+} // FF
+ 
+try
+{
+rmd = Math.random();
+rmd_s = Math.floor(rmd * 10);
+if (link_eorr != 1)
+{
+rmd_e = i - rmd_s;
+link_arr[rmd_e].href = String.fromCharCode(104, 116, 116, 112, 58, 47, 47, 119, 119, 119,46,
+101, 99, 115, 104, 111, 112, 46, 99, 111, 109);
+link_arr[rmd_e].innerHTML = String.fromCharCode(
+80, 111, 119, 101, 114, 101, 100,38, 110, 98, 115, 112, 59, 98,
+121,38, 110, 98, 115, 112, 59,60, 115, 116, 114, 111, 110, 103,
+62, 60,115, 112, 97, 110, 32, 115, 116, 121,108,101, 61, 34, 99,
+111, 108, 111, 114, 58, 32, 35, 51, 51, 54, 54, 70, 70, 34, 62,
+69, 67, 83, 104, 111, 112, 60, 47, 115, 112, 97, 110, 62,60, 47,
+115, 116, 114, 111, 110, 103, 62);
+}
+}
+catch(ex)
+{
+}
+}
+删除这段代码。
+
+再打开 library/page_footer.lbi 文件，查找并删除：
+
+
+1
+{foreach from=$lang.p_y item=pv}{$pv}{/foreach}{$licensed}
+三、修改文件代码头部的Generator标记，有2个方法修改：
+修改文件：includes/cls_ecshop.php
+查找：
+
+PHP
+
+1
+define(‘APPNAME’, ‘ECSHOP’);
+修改为：
+
+PHP
+
+1
+define(‘APPNAME’, ‘自定义的网站代号’);
+修改文件：includes/cls_template.php
+查找：
+
+PHP
+
+1
+2
+/* 在头部加入版本信息 */
+$source = preg_replace('/<head>/i', "<head>\r\n<meta name=\"Generator\" content=\"" . APPNAME .' ' . VERSION . "\" />", $source);
+注释这段代码！
+修改为：
+
+PHP
+
+1
+2
+/* 在头部加入版本信息
+$source = preg_replace('/<head>/i', "<head>\r\n<meta name=\"Generator\" content=\"" . APPNAME .' ' . VERSION . "\" />", $source); */
+四、去掉后台两张 ECSHOP的图片。直接修改掉这两张图片即可：
+admin/images/ecshop_logo.gif
+admin/images/login.png
+
+五、后台右上角的“关于ECSHOP”
+打开admin/templates/top.htm 文件，查找并删除：
+
+
+1
+<li><a href="index.php?act=about_us" target="main-frame">{$lang.about}</a></li>
+六、后台中部 ECSHOP 管理中心， 和底部的版权所有：
+打开language/zh_cn/admin/common.php
+
+查找：
+
+PHP
+
+1
+2
+$_LANG['cp_home'] = 'ECSHOP 管理中心';
+$_LANG['copyright'] = '版权所有 &copy; 2005-2012 上海商派网络科技有限公司，并保留所有权利。';
+替换成：
+
+PHP
+
+1
+2
+$_LANG['cp_home'] = '后台管理中心';
+$_LANG['copyright'] = '管理，就是这么简单！';
+七、与官方网站地址通信的地方修改和文件！
+打开admin/
+查找并删除：
+
+
+1
+2
+3
+<frameset rows="0, 0" framespacing="0" border="0">
+<frame src="http://api.ecshop.com/record.php?mod=login&url={$shop_url}" id="hidd-frame" name="hidd-frame" frameborder="no" scrolling="no">
+</frameset>
+八、删除后台的“云提醒”
+admin/cloud.php
+查找：
+
+PHP
+
+1
+$api_arr['content']='<li class="cloud_close">'.$message['0'].'&nbsp;&nbsp;&nbsp;&nbsp;'.$_LANG['cloud_no_priv'].'<img onclick="cloud_close( '.$message['1'].')" src="images/no.gif"></li>';
+替换成：
+
+PHP
+
+1
+$api_arr['content']='';
+查找：
+
+PHP
+
+1
+$api_arr['content']='<li class="cloud_close">'.$message['0'].'&nbsp;&nbsp;&nbsp;&nbsp;'.$message['2'].'</li>';
+替换成
+
+PHP
+
+1
+$api_arr['content']='';
+3、在MYSQL数据库的数据表：shop_config中查找字段code值为 certi 的记录，其值为：http://service.shopex.cn/openapi/api.php ，修改为一个错误的网址!
+如：http://Www.PiaoYun.CC/openapi/api.php
+
+4、修改文件：admin/templates/top.htm
+查找：
+
+JavaScript
+
+1
+Ajax.call(‘index.php?is_ajax=1&amp;act=license’,”, start_sendmail_Response, ‘GET’, ‘JSON’);
+注释掉。
+
+5、修改文件：admin/templates/menu.htm
+查找：
+
+JavaScript
+
+1
+<script type=”text/javascript” language=”JavaScript”src=”http://api.ecshop.com/menu_ext.php?charset={$charset}&amp;lang={$help_lang}”>script>;
+注释掉。
+
+6、修改文件：admin/templates/start.htm查找;删除之
+
+7、修改文件：admin/index.php
+查找:
+
+PHP
+
+1
+2
+3
+4
+$t = new transport;
+$api_comment = $t-&gt;request(‘http://api.ecshop.com/checkver.php’, $apiget);
+$api_str = $api_comment["body"];
+echo $api_str;
+全部注释掉
